@@ -1,0 +1,63 @@
+﻿@page "/tictactoe"
+<h1>TicTacToe</h1>
+
+@{
+    int Size = (int)Math.Sqrt(board.Grid.Length);
+    @functions{
+        private string Name { get; set; } = "Casey";
+        private Board board { get; set; } = new Board(3);
+        private string XorO { get; set; } = "X";
+        private bool XTurn { get; set; } = true;
+
+        private void Move(MouseEventArgs e, string location)
+        {
+            var first = int.Parse(location[0].ToString());
+            var second = int.Parse(location[1].ToString());
+            Console.WriteLine("first = " + first);
+            Console.WriteLine("second = " + second);
+            var cell = board.Grid[first, second];
+            if (ValidateMove(first, second))
+            {
+                cell.Symbol = XorO;
+                Console.WriteLine("new value = " + cell.Symbol);
+                XTurn = !XTurn;
+                XorO = XTurn ? "X" : "O";
+            }
+        }
+        public bool ValidateMove(int first, int second)
+        {
+            int size = (int)Math.Sqrt(board.Grid.Length);
+            if ((first >= 0 && first <= size - 1) && (second >= 0 && second <= size - 1))
+            {
+                if (board.Grid[first, second].Symbol.Equals("_") &&
+                    !board.Grid[first, second].Symbol.Equals("X") &&
+                    !board.Grid[first, second].Symbol.Equals("O"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+
+@{
+    <table class="w3-table w3-border">
+        @for (int i = 0; i < Size; i++)
+        {
+            <tr>
+                @for (int j = 0; j < Size; j++)
+                {
+                    var first = i;
+                    var second = j;
+                    var cell = board.Grid[first, second];
+                    <td class="w3-border">
+                        <label class="w3-button" @onclick="@(e => Move(e ,cell.Location))">
+                            @board.Grid[first, second].Symbol
+                        </label>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+}
