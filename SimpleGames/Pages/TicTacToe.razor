@@ -1,13 +1,9 @@
 ﻿@page "/tictactoe"
-<h1>TicTacToe</h1>
 
 @{
-    int Size = (int)Math.Sqrt(board.Grid.Length);
     @functions{
-        private string Name { get; set; } = "Casey";
         private Board board { get; set; } = new Board(3);
-        private string XorO { get; set; } = "X";
-        private bool XTurn { get; set; } = true;
+        
 
         private void Move(MouseEventArgs e, string location)
         {
@@ -18,13 +14,13 @@
             var cell = board.Grid[first, second];
             if (ValidateMove(first, second))
             {
-                cell.Symbol = XorO;
+                cell.Symbol = board.XorO;
                 Console.WriteLine("new value = " + cell.Symbol);
-                XTurn = !XTurn;
-                XorO = XTurn ? "X" : "O";
+                board.XTurn = !board.XTurn;
+                board.XorO = board.XTurn ? "X" : "O";
             }
         }
-        public bool ValidateMove(int first, int second)
+        private bool ValidateMove(int first, int second)
         {
             int size = (int)Math.Sqrt(board.Grid.Length);
             if ((first >= 0 && first <= size - 1) && (second >= 0 && second <= size - 1))
@@ -38,26 +34,46 @@
             }
             return false;
         }
+        private void ResetBoard()
+        {
+            board.InitializeBoardValues(board.Size);
+            board.XTurn = true;
+        }
     }
 }
-
-@{
-    <table class="w3-table w3-border">
-        @for (int i = 0; i < Size; i++)
-        {
-            <tr>
-                @for (int j = 0; j < Size; j++)
+<h1 class="w3-padding">TicTacToe</h1>
+<div class="w3-row">
+    @{
+        <div class="w3-container w3-col s12 m6 l4 w3-padding">
+            <table class="w3-table">
+                @for (int i = 0; i < board.Size; i++)
                 {
-                    var first = i;
-                    var second = j;
-                    var cell = board.Grid[first, second];
-                    <td class="w3-border">
-                        <label class="w3-button" @onclick="@(e => Move(e ,cell.Location))">
-                            @board.Grid[first, second].Symbol
-                        </label>
-                    </td>
+                    <tr>
+                        @for (int j = 0; j < board.Size; j++)
+                        {
+                            var first = i;
+                            var second = j;
+                            var cell = board.Grid[first, second];
+                            <td class="w3-border w3-center">
+                                <label class="w3-button" @onclick="@(e => Move(e ,cell.Location))">
+                                    @board.Grid[first, second].Symbol
+                                </label>
+                            </td>
+                        }
+                    </tr>
                 }
-            </tr>
-        }
-    </table>
-}
+            </table>
+        </div>
+        <div id="boardSize" class="w3-container w3-col s12 m6 l4 w3-padding w3-center">
+            <EditForm Model="board" OnValidSubmit="ResetBoard">
+                <button type="submit" class="w3-button w3-green">Reset Board</button>
+            </EditForm>
+        </div>
+        <div class="w3-container w3-col s12 m6 l4 w3-margin-bottom">
+            <p>
+                This game is built in ASP.Net Core Blazor and utilizes an onclick event handler to change the board. 
+            </p>
+        </div>
+    }
+
+</div>

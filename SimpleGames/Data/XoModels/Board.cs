@@ -11,9 +11,9 @@ namespace SimpleGames.Data
 
     public class Board
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int Size { get; set; }
         public bool XTurn { get; set; } = true;
+        public string XorO { get; set; } = "X";
         public Cell [,] Grid { get; set; }
 
         public Board()
@@ -22,14 +22,12 @@ namespace SimpleGames.Data
         }
         public Board(Board board)
         {
-            Width = board.Width;
-            Height = board.Height;
+            Size = board.Size;
             Grid = board.Grid;
         }
         public Board(int size)
         {
-            Width = size;
-            Height = size;
+            Size = size;
             InitializeBoardValues(size);
         }
 
